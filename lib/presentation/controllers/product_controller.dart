@@ -17,6 +17,28 @@ class ProductController extends GetxController {
   var filteredProducts = <ProductModel>[].obs;
   var favoriteIds = <int>[].obs;
   var favoriteProducts = <ProductModel>[].obs;
+  List<ProductModel> get bannerProducts {
+    // return products.take(5).toList();
+    final List<ProductModel> banners = [];
+
+    final catagories = [
+      "men's clothing",
+      "women's clothing",
+      "electronics",
+      "jewelery",
+    ];
+
+    for (final category in catagories) {
+      try {
+        banners.add(
+          products.firstWhere(
+            (product) => product.category.toLowerCase() == category,
+          ),
+        );
+      } catch (_) {}
+    }
+    return banners;
+  }
 
   @override
   void onInit() {
