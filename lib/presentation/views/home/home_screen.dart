@@ -1,16 +1,13 @@
 import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:my_product/core/utils/app_sizes.dart';
 import 'package:my_product/core/utils/app_colors.dart';
 import 'package:my_product/presentation/controllers/product_controller.dart';
-import 'package:my_product/presentation/views/cart/cart_page.dart';
 import 'package:my_product/presentation/views/notification/notification.dart';
 import 'package:my_product/presentation/views/widgets/banner_widget.dart';
 import 'package:my_product/presentation/views/widgets/catagory_section.dart';
-import 'package:my_product/presentation/views/widgets/search_bar_delegence.dart';
 
 class HomeScreen extends StatelessWidget {
   HomeScreen({super.key});
@@ -56,9 +53,7 @@ class HomeScreen extends StatelessWidget {
           children: [
             CircleAvatar(
               radius: 23,
-              backgroundImage: AssetImage(
-                'assets/images/PXL_20230907_074917292.PORTRAIT.jpg',
-              ),
+              backgroundImage: AssetImage('assets/images/profile.jpg'),
               onBackgroundImageError: (_, __) {
                 // fallback handled below
               },
@@ -109,6 +104,7 @@ class HomeScreen extends StatelessWidget {
       body: Stack(
         children: [
           Container(
+            // padding: EdgeInsets.only(left: 16.0, right: 16.0),
             decoration: const BoxDecoration(
               gradient: LinearGradient(
                 begin: Alignment.topLeft,
@@ -148,154 +144,94 @@ class HomeScreen extends StatelessWidget {
             ),
           ),
 
-          SafeArea(
-            child: CustomScrollView(
-              slivers: [
-                SliverPersistentHeader(
-                  pinned: true,
-                  delegate: SearchBarDelegate(
-                    child: _searchBar(
-                      horizontalPadding,
-                      borderRadius,
-                      searchFontSize,
+          Padding(
+            padding: EdgeInsets.only(left: 10.0, right: 10.0),
+            child: SafeArea(
+              child: CustomScrollView(
+                slivers: [
+                  // SliverPersistentHeader(
+                  //   pinned: true,
+                  //   delegate: SearchBarDelegate(
+                  //     child: _searchBar(
+                  //       horizontalPadding,
+                  //       borderRadius,
+                  //       searchFontSize,
+                  //     ),
+                  //   ),
+                  // ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 10)),
+                  SliverToBoxAdapter(
+                    child: Obx(
+                      () => ProductBanner(products: controller.bannerProducts),
                     ),
                   ),
-                ),
 
-                SliverToBoxAdapter(
-                  child: Obx(
-                    () => ProductBanner(products: controller.bannerProducts),
-                  ),
-                ),
+                  const SliverToBoxAdapter(child: SizedBox(height: 10)),
 
-                const SliverToBoxAdapter(child: SizedBox(height: 10)),
-
-                SliverToBoxAdapter(
-                  child: Obx(() {
-                    if (controller.isLoading.value) {
-                      return const Padding(
-                        padding: EdgeInsets.all(40),
-                        child: Center(child: CircularProgressIndicator()),
-                      );
-                    }
-
-                    if (controller.isError.value) {
-                      return Center(
-                        child: Column(
-                          children: [
-                            const Text(
-                              "Failed to load products",
-                              style: TextStyle(color: AppColors.textPrimary),
-                            ),
-                            const SizedBox(height: 12),
-                            IconButton(
-                              onPressed: controller.loadProducts,
-                              icon: const Icon(
-                                Icons.refresh,
-                                color: AppColors.textPrimary,
-                                size: 35,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    }
-
-                    if (controller.filteredProducts.isEmpty) {
-                      return const Padding(
-                        padding: EdgeInsets.all(40),
-                        child: Text(
-                          "No products found",
-                          style: TextStyle(color: AppColors.textPrimary),
-                        ),
-                      );
-                    }
-
-                    return Column(
-                      children: categories.map((category) {
-                        return CategorySection(
-                          title: category.contains("'s")
-                              ? category.split("'s").first.capitalizeFirst!
-                              : category.capitalizeFirst!,
-                          products: controller.filteredProducts
-                              .where(
-                                (p) => p.category.toLowerCase() == category,
-                              )
-                              .toList(),
+                  SliverToBoxAdapter(
+                    child: Obx(() {
+                      if (controller.isLoading.value) {
+                        return const Padding(
+                          padding: EdgeInsets.all(40),
+                          child: Center(child: CircularProgressIndicator()),
                         );
-                      }).toList(),
-                    );
-                  }),
-                ),
+                      }
 
-                const SliverToBoxAdapter(child: SizedBox(height: 30)),
-              ],
+                      if (controller.isError.value) {
+                        return Center(
+                          child: Column(
+                            children: [
+                              const Text(
+                                "Failed to load products",
+                                style: TextStyle(color: AppColors.textPrimary),
+                              ),
+                              const SizedBox(height: 12),
+                              IconButton(
+                                onPressed: controller.loadProducts,
+                                icon: const Icon(
+                                  Icons.refresh,
+                                  color: AppColors.textPrimary,
+                                  size: 35,
+                                ),
+                              ),
+                            ],
+                          ),
+                        );
+                      }
+
+                      if (controller.filteredProducts.isEmpty) {
+                        return const Padding(
+                          padding: EdgeInsets.all(40),
+                          child: Text(
+                            "No products found",
+                            style: TextStyle(color: AppColors.textPrimary),
+                          ),
+                        );
+                      }
+
+                      return Column(
+                        children: categories.map((category) {
+                          return CategorySection(
+                            title: category.contains("'s")
+                                ? category.split("'s").first.capitalizeFirst!
+                                : category.capitalizeFirst!,
+                            products: controller.filteredProducts
+                                .where(
+                                  (p) => p.category.toLowerCase() == category,
+                                )
+                                .toList(),
+                          );
+                        }).toList(),
+                      );
+                    }),
+                  ),
+
+                  const SliverToBoxAdapter(child: SizedBox(height: 70)),
+                ],
+              ),
             ),
           ),
         ],
-      ),
-    );
-  }
-
-  Widget _searchBar(
-    double horizontalPadding,
-    BorderRadius borderRadius,
-    double searchFontSize,
-  ) {
-    return Padding(
-      padding: EdgeInsets.symmetric(
-        horizontal: horizontalPadding,
-        vertical: AppSizes.spacingSmall,
-      ),
-      child: ClipRRect(
-        borderRadius: borderRadius,
-        child: BackdropFilter(
-          filter: ImageFilter.blur(sigmaX: 40, sigmaY: 40),
-          child: Container(
-            decoration: BoxDecoration(
-              borderRadius: borderRadius,
-
-              color: Colors.white.withOpacity(0.18),
-
-              border: Border.all(
-                color: Colors.white.withOpacity(0.35),
-                width: 1.2,
-              ),
-
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.08),
-                  blurRadius: 25,
-                  offset: const Offset(0, 10),
-                ),
-              ],
-            ),
-            child: TextField(
-              onChanged: controller.search,
-              style: GoogleFonts.montserrat(
-                fontWeight: FontWeight.w500,
-                color: AppColors.textPrimary,
-              ),
-              decoration: InputDecoration(
-                hintText: "Search products",
-                hintStyle: GoogleFonts.montserrat(
-                  fontWeight: FontWeight.w500,
-                  fontSize: searchFontSize,
-                  color: AppColors.textSecondary,
-                ),
-                prefixIcon: const Icon(
-                  Icons.search,
-                  color: AppColors.textSecondary,
-                ),
-                border: InputBorder.none,
-                contentPadding: const EdgeInsets.symmetric(
-                  horizontal: AppSizes.spacingLarge,
-                  vertical: AppSizes.spacingLarge,
-                ),
-              ),
-            ),
-          ),
-        ),
       ),
     );
   }

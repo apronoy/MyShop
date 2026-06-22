@@ -8,8 +8,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:my_product/core/utils/app_colors.dart';
 import 'package:readmore/readmore.dart';
 
-class ProductDetailScreen extends StatelessWidget {
-  const ProductDetailScreen({super.key});
+class ProductCartDetails extends StatelessWidget {
+  const ProductCartDetails({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -135,7 +135,7 @@ class ProductDetailScreen extends StatelessWidget {
               padding: const EdgeInsets.symmetric(
                 vertical: AppSizes.buttonVerticalPadding,
               ),
-              backgroundColor: AppColors.accent,
+              backgroundColor: AppColors.primary,
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(AppSizes.borderRadiusSmall),
               ),
@@ -149,11 +149,11 @@ class ProductDetailScreen extends StatelessWidget {
                 backgroundColor: AppColors.success,
 
                 titleText: Text(
-                  'Cart Added',
+                  'Purchase Added',
                   style: GoogleFonts.montserrat(color: AppColors.white),
                 ),
                 messageText: Text(
-                  'Successfully your choise added to Cart !',
+                  'Successfully Purchase !',
                   style: GoogleFonts.montserrat(color: AppColors.white),
                 ),
                 duration: const Duration(milliseconds: 1500),
@@ -172,7 +172,7 @@ class ProductDetailScreen extends StatelessWidget {
                 ),
                 SizedBox(width: 10),
                 Text(
-                  'Add To Cart',
+                  'Purchase',
                   style: GoogleFonts.montserrat(
                     fontSize: AppSizes.fontRegular,
                     fontWeight: FontWeight.w500,

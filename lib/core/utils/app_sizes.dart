@@ -11,11 +11,11 @@ class AppSizes {
   static const double spacingXXLarge = 24.0;
   static const double spacingXXXLarge = 30.0;
 
-  // border 
+  // border
   static const double borderRadiusSmall = 10.0;
   static const double borderRadiusMedium = 15.0;
 
-  // font 
+  // font
   static const double fontSmall = 12.0;
   static const double fontMedium = 14.0;
   static const double fontRegular = 16.0;
@@ -31,12 +31,12 @@ class AppSizes {
 
   // card
   static const double cardWidth = 250.0;
-  static const double cardSectionHeight = 230.0;
+  static const double cardSectionHeight = 240.0;
   static const double cardImageRatio = 0.35;
   static const double cardMaxWidth = 380.0;
   static const double cardMinWidth = 260.0;
 
-  // icon 
+  // icon
   static const double iconSmall = 24.0;
   static const double iconMedium = 26.0;
   static const double iconLarge = 30.0;

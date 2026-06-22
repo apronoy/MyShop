@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:my_product/core/utils/app_sizes.dart';
 import 'package:my_product/data/models/product_model.dart';
 import 'package:my_product/presentation/controllers/product_controller.dart';
 import 'package:cached_network_image/cached_network_image.dart';
@@ -15,97 +14,103 @@ class ProductCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final controller = Get.find<ProductController>();
 
-    return LayoutBuilder(
-      builder: (context, constraints) {
-        final cardWidth = constraints.maxWidth;
-        final imageHeight = cardWidth * 0.35;
-        final titleFontSize = cardWidth > 300 ? 16.0 : 14.0;
-        final priceFontSize = cardWidth > 300 ? 18.0 : 16.0;
-        final ratingFontSize = cardWidth > 300 ? 14.0 : 12.0;
+    return GestureDetector(
+      onTap: () {
+        Get.toNamed('/detail', arguments: product);
+      },
+      child: Container(
+        margin: const EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(18),
+          border: Border.all(color: Colors.grey.shade200),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.05),
+              blurRadius: 12,
+              offset: const Offset(0, 4),
+            ),
+          ],
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(12),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              /// Favorite Button
+              Align(
+                alignment: Alignment.topRight,
+                child: Obx(() {
+                  final isFav = controller.isFavorite(product.id);
 
-        return GestureDetector(
-          onTap: () {
-            Get.toNamed('/detail', arguments: product);
-          },
-          child: Card(
-            margin: const EdgeInsets.all(AppSizes.spacingSmall),
-            child: Padding(
-              padding: const EdgeInsets.all(AppSizes.spacingNormal),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Align(
-                    alignment: Alignment.topRight,
-                    child: Obx(() {
-                      return IconButton(
-                        icon: Icon(
-                          controller.isFavorite(product.id)
-                              ? Icons.favorite
-                              : Icons.favorite_border,
-                        ),
-                        onPressed: () {
-                          controller.toggleFavorite(product.id);
-                        },
-                        color: controller.isFavorite(product.id)
-                            ? Colors.red
-                            : Colors.black,
-                      );
-                    }),
-                  ),
-
-                  SizedBox(
-                    height: imageHeight,
-                    width: double.infinity,
-                    child: Center(
-                      child: CachedNetworkImage(
-                        imageUrl: product.image,
-                        fit: BoxFit.contain,
-                        placeholder: (context, url) => const SizedBox(
-                          height: 24,
-                          width: 24,
-                          child: CircularProgressIndicator(strokeWidth: 2),
-                        ),
-                        errorWidget: (context, url, error) =>
-                            const Icon(Icons.broken_image),
-                      ),
+                  return InkWell(
+                    onTap: () {
+                      controller.toggleFavorite(product.id);
+                    },
+                    child: Icon(
+                      isFav ? Icons.favorite : Icons.favorite_border,
+                      color: isFav ? Colors.red : Colors.grey,
                     ),
+                  );
+                }),
+              ),
+
+              /// Product Image
+              Expanded(
+                flex: 5,
+                child: Center(
+                  child: CachedNetworkImage(
+                    imageUrl: product.image,
+                    fit: BoxFit.contain,
+                    placeholder: (_, __) => const CircularProgressIndicator(),
+                    errorWidget: (_, __, ___) => const Icon(Icons.broken_image),
                   ),
+                ),
+              ),
 
-                  const SizedBox(height: AppSizes.spacingXSmall),
+              const SizedBox(height: 10),
 
+              /// Title
+              Text(
+                product.title,
+                maxLines: 2,
+                overflow: TextOverflow.ellipsis,
+                style: GoogleFonts.montserrat(
+                  fontSize: 12,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+
+              const Spacer(),
+
+              /// Price & Rating
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
                   Text(
-                    product.title,
-                    maxLines: 1,
-                    overflow: TextOverflow.ellipsis,
+                    '\$${product.price}',
                     style: GoogleFonts.montserrat(
-                      fontWeight: FontWeight.w600,
-                      fontSize: titleFontSize,
+                      fontSize: 16,
+                      fontWeight: FontWeight.bold,
                     ),
                   ),
 
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
+                      const Icon(Icons.star, color: Colors.amber, size: 16),
+                      const SizedBox(width: 3),
                       Text(
-                        '\$${product.price}',
-                        style: GoogleFonts.montserrat(
-                          fontWeight: FontWeight.w600,
-                          fontSize: priceFontSize,
-                        ),
-                      ),
-
-                      Text(
-                        '⭐ ${product.rating}',
-                        style: GoogleFonts.montserrat(fontSize: ratingFontSize),
+                        product.rating.toString(),
+                        style: GoogleFonts.montserrat(fontSize: 12),
                       ),
                     ],
                   ),
                 ],
               ),
-            ),
+            ],
           ),
-        );
-      },
+        ),
+      ),
     );
   }
 }

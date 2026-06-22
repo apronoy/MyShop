@@ -67,6 +67,7 @@ class BottomNavigationScreen extends StatelessWidget {
                             icon: Icon(Icons.person_2_rounded),
                             label: 'Profile',
                           ),
+                          
                         ],
                       ),
                     ),

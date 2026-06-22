@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get_navigation/src/root/get_material_app.dart';
 import 'package:get/get_navigation/src/routes/get_route.dart';
 import 'package:my_product/injection.dart';
 import 'package:my_product/core/utils/app_colors.dart';
 import 'package:my_product/presentation/views/bottom_nabvar.dart';
+import 'package:my_product/presentation/views/products/product_cart_details.dart';
 import 'package:my_product/presentation/views/products/product_detail_screen.dart';
 
 void main() {
@@ -23,7 +25,18 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
 
       // Apply the centralized light theme
-      theme: AppTheme.lightTheme,
+      theme: ThemeData(
+        scaffoldBackgroundColor: AppColors.white,
+        appBarTheme: const AppBarTheme(
+          backgroundColor: AppColors.white,
+          foregroundColor: AppColors.black,
+          systemOverlayStyle: SystemUiOverlayStyle(
+            statusBarColor: Colors.transparent,
+            statusBarIconBrightness: Brightness.dark,
+            statusBarBrightness: Brightness.dark,
+          ),
+        ),
+      ),
 
       initialRoute: "/",
 
@@ -31,6 +44,7 @@ class MyApp extends StatelessWidget {
         GetPage(name: "/", page: () => const BottomNavigationScreen()),
 
         GetPage(name: "/detail", page: () => const ProductDetailScreen()),
+        GetPage(name: "/Cartdetail", page: () => const ProductCartDetails()),
       ],
     );
   }
